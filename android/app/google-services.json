@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329717792262",
+    "project_id": "el-ciclista-chapin",
+    "storage_bucket": "el-ciclista-chapin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329717792262:android:dfa5987c0f0f3b4df9cd87",
+        "android_client_info": {
+          "package_name": "com.elciclistachapin.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqVmG3uUle10V5liNJy23LOhr8QglLsx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
