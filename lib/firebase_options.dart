@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -51,7 +48,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCqVmG3uUle10V5liNJy23LOhr8QglLsx8',
-    appId: '1:329717792262:android:ae4e9b83c4c96b9af9cd87',
+    appId: '1:329717792262:android:dfa5987c0f0f3b4df9cd87',
     messagingSenderId: '329717792262',
     projectId: 'el-ciclista-chapin',
     storageBucket: 'el-ciclista-chapin.firebasestorage.app',
@@ -65,4 +62,14 @@ class DefaultFirebaseOptions {
     storageBucket: 'el-ciclista-chapin.firebasestorage.app',
     iosBundleId: 'com.example.elCiclistaChapin',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyA4tVsJrUC2IS43EAQcypToPCfk0SBBiQ4',
+    appId: '1:329717792262:web:6674dae4ad12e956f9cd87',
+    messagingSenderId: '329717792262',
+    projectId: 'el-ciclista-chapin',
+    authDomain: 'el-ciclista-chapin.firebaseapp.com',
+    storageBucket: 'el-ciclista-chapin.firebasestorage.app',
+  );
+
 }
