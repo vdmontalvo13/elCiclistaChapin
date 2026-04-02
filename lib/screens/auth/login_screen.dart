@@ -29,37 +29,51 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-  if (_formKey.currentState!.validate()) {
-    setState(() => _isLoading = true);
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
 
-    try {
-      await _authService.signInWithEmailAndPassword(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
+      try {
+        await _authService.signInWithEmailAndPassword(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        );
 
-      if (!mounted) return;
-      
-      // Navegar usando pushAndRemoveUntil
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-        (route) => false,
-      );
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
+        if (!mounted) return;
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (route) => false,
+        );
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
     }
   }
-}
+
+  Widget _fieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: AppColors.buttonPrimary,
+          letterSpacing: 0.8,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.buttonPrimary,
-              AppColors.buttonPrimary.withOpacity(0.7),
+              Color(0xFF031F41),
+              Color(0xFF006670),
             ],
           ),
         ),
@@ -90,50 +104,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo
-                      Image.asset(
-                        'assets/images/logo.png',
-                        width: 230,
-                        height: 230,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Título
-                      const Text(
-                        'El Ciclista Chapín',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-
-                      // Subtítulo
-                      const Text(
-                        'La mejor comunidad de ciclistas guatemaltecos',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white70,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Card con formulario
+                      // Card principal
                       Center(
                         child: SizedBox(
                           width: isWeb ? 420.0 : double.infinity,
                           child: Container(
-                            padding: const EdgeInsets.all(24),
+                            padding: const EdgeInsets.all(28),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
+                                  color: Colors.black.withOpacity(0.12),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 12),
                                 ),
                               ],
                             ),
@@ -141,18 +125,69 @@ class _LoginScreenState extends State<LoginScreen> {
                               key: _formKey,
                               child: Column(
                                 children: [
+                                  // Logo
+                                  Image.asset(
+                                    'assets/images/logo.png',
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  const SizedBox(height: 8),
+
+                                  // Nombre de la app
+                                  Text(
+                                    'El Ciclista Chapín',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.darkBlue,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Descripción
+                                  const Text(
+                                    'El ciclista chapín, la mejor comunidad\nde ciclistas guatemaltecos',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF7F8C8D),
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 28),
+
                                   // EMAIL
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: _fieldLabel('CORREO ELECTRÓNICO'),
+                                  ),
                                   TextFormField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     decoration: InputDecoration(
-                                      labelText: 'Correo Electrónico',
+                                      hintText: 'tu@email.com',
+                                      hintStyle: TextStyle(color: Colors.grey[400]),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
                                       ),
-                                      prefixIcon: const Icon(Icons.email),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: AppColors.buttonPrimary,
+                                            width: 1.5),
+                                      ),
+                                      prefixIcon: Icon(Icons.email_outlined,
+                                          color: Colors.grey[400], size: 20),
                                       filled: true,
-                                      fillColor: Colors.grey[50],
+                                      fillColor: const Color(0xFFF4F6F8),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 14),
                                     ),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -167,26 +202,49 @@ class _LoginScreenState extends State<LoginScreen> {
                                   const SizedBox(height: 16),
 
                                   // CONTRASEÑA
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: _fieldLabel('CONTRASEÑA'),
+                                  ),
                                   TextFormField(
                                     controller: _passwordController,
                                     obscureText: _obscurePassword,
                                     decoration: InputDecoration(
-                                      labelText: 'Contraseña',
+                                      hintText: '••••••••',
+                                      hintStyle: TextStyle(color: Colors.grey[400]),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
                                       ),
-                                      prefixIcon: const Icon(Icons.lock),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: AppColors.buttonPrimary,
+                                            width: 1.5),
+                                      ),
+                                      prefixIcon: Icon(Icons.lock_outline,
+                                          color: Colors.grey[400], size: 20),
                                       filled: true,
-                                      fillColor: Colors.grey[50],
+                                      fillColor: const Color(0xFFF4F6F8),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 14),
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           _obscurePassword
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
+                                              ? Icons.visibility_off_outlined
+                                              : Icons.visibility_outlined,
+                                          color: Colors.grey[400],
+                                          size: 20,
                                         ),
                                         onPressed: () {
                                           setState(() =>
-                                              _obscurePassword = !_obscurePassword);
+                                              _obscurePassword =
+                                                  !_obscurePassword);
                                         },
                                       ),
                                     ),
@@ -197,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       return null;
                                     },
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: 28),
 
                                   // BOTÓN LOGIN
                                   SizedBox(
@@ -208,7 +266,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppColors.buttonPrimary,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius:
+                                              BorderRadius.circular(25),
                                         ),
                                         elevation: 0,
                                       ),
@@ -231,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 20),
 
                                   // LINK A REGISTRO
                                   Row(
@@ -239,7 +298,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       Text(
                                         '¿No tienes cuenta? ',
-                                        style: TextStyle(color: Colors.grey[600]),
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 13),
                                       ),
                                       GestureDetector(
                                         onTap: () {
@@ -252,10 +313,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                           );
                                         },
                                         child: Text(
-                                          'Regístrate',
+                                          'Regístrate ahora',
                                           style: TextStyle(
                                             color: AppColors.buttonPrimary,
                                             fontWeight: FontWeight.bold,
+                                            fontSize: 13,
                                           ),
                                         ),
                                       ),
@@ -267,6 +329,45 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+
+                      const SizedBox(height: 32),
+
+                      // FOOTER
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.chat_bubble_outline,
+                              color: Colors.white70, size: 22),
+                          const SizedBox(width: 24),
+                          Icon(Icons.camera_alt_outlined,
+                              color: Colors.white70, size: 22),
+                          const SizedBox(width: 24),
+                          Icon(Icons.emoji_events_outlined,
+                              color: Colors.white70, size: 22),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _footerLink('PRIVACIDAD'),
+                          const SizedBox(width: 20),
+                          _footerLink('TÉRMINOS'),
+                          const SizedBox(width: 20),
+                          _footerLink('SOPORTE'),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        '© 2025 EL CICLISTA CHAPÍN. TODOS LOS DERECHOS RESERVADOS.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 9,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -274,6 +375,18 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _footerLink(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white70,
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
       ),
     );
   }

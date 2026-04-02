@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _selectedCiclismoPreferido;
   String? _selectedGenero;
   DateTime? _fechaNacimiento;
-  
+
   bool _isLoading = false;
   bool _obscurePassword = true;
 
@@ -68,7 +68,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
-      // Validaciones adicionales
       if (_selectedRol == 'ciclista' && _selectedCiclismoPreferido == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -150,6 +149,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  Widget _fieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: AppColors.buttonPrimary,
+          letterSpacing: 0.8,
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _fieldDecoration({
+    required String hint,
+    IconData? icon,
+    Widget? suffix,
+  }) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide:
+            BorderSide(color: AppColors.buttonPrimary, width: 1.5),
+      ),
+      prefixIcon: icon != null
+          ? Icon(icon, color: Colors.grey[400], size: 20)
+          : null,
+      suffixIcon: suffix,
+      filled: true,
+      fillColor: const Color(0xFFF4F6F8),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,8 +207,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.buttonPrimary,
-              AppColors.buttonPrimary.withOpacity(0.7),
+              Color(0xFF031F41),
+              Color(0xFF006670),
             ],
           ),
         ),
@@ -173,420 +219,423 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
                   horizontal: 24.0,
-                  vertical: isWeb ? 48.0 : 0.0,
+                  vertical: isWeb ? 48.0 : 24.0,
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 40),
-
-                    // Logo
-                    Image.asset(
-                      'assets/images/logo.png',
-                      width: isWeb ? 110.0 : 100.0,
-                      height: isWeb ? 110.0 : 100.0,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Título
-                    Text(
-                      'El Ciclista Chapín',
-                      style: TextStyle(
-                        fontSize: isWeb ? 28.0 : 24.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Subtítulo
-                    const Text(
-                      'Crear cuenta nueva',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
                     // Card con formulario
                     Center(
                       child: SizedBox(
                         width: isWeb ? 420.0 : double.infinity,
                         child: Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // DROPDOWN ROL
-                        DropdownButtonFormField<String>(
-                          value: _selectedRol,
-                          decoration: InputDecoration(
-                            labelText: 'Tipo de Usuario',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            prefixIcon: const Icon(Icons.person),
-                            filled: true,
-                            fillColor: Colors.grey[50],
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.12),
+                                blurRadius: 24,
+                                offset: const Offset(0, 12),
+                              ),
+                            ],
                           ),
-                          items: const [
-                            DropdownMenuItem(
-                                value: 'ciclista', child: Text('Ciclista')),
-                            DropdownMenuItem(
-                                value: 'organizador', child: Text('Organizador')),
-                          ],
-                          onChanged: (value) {
-                            setState(() => _selectedRol = value!);
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // FOTO DE PERFIL (solo ciclistas) - PREDETERMINADA
-                        if (_selectedRol == 'ciclista') ...[
-                          Center(
-                            child: Stack(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.grey[300],
-                                  child: Icon(Icons.person,
-                                      size: 50, color: Colors.grey[600]),
+                                // Logo + título (dentro del card)
+                                Center(
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/logo.png',
+                                        width: isWeb ? 100.0 : 80.0,
+                                        height: isWeb ? 100.0 : 80.0,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'Únete a la ruta',
+                                        style: TextStyle(
+                                          fontSize: isWeb ? 26.0 : 22.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.darkBlue,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'La comunidad de ciclismo que une a toda Guatemala. '
+                                        'Disfruta de las mejores carreras de ciclismo de Guatemala, '
+                                        'entérate, inscríbete y descubre nuevas rutas.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[600],
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.camera_alt,
-                                      size: 20,
-                                      color: Colors.white,
+
+                                // TOGGLE ROL
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF4F6F8),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.all(4),
+                                  child: Row(
+                                    children: [
+                                      _rolTab('Ciclista', 'ciclista'),
+                                      _rolTab('Organizador', 'organizador'),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+
+                                // CAMPOS COMUNES
+                                _fieldLabel('NOMBRE'),
+                                TextFormField(
+                                  controller: _nombreController,
+                                  decoration: _fieldDecoration(
+                                      hint: 'Ej. Juan', icon: Icons.person_outline),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu nombre';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 14),
+
+                                _fieldLabel('APELLIDO'),
+                                TextFormField(
+                                  controller: _apellidoController,
+                                  decoration: _fieldDecoration(
+                                      hint: 'Ej. Pérez',
+                                      icon: Icons.person_outline),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu apellido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 14),
+
+                                _fieldLabel('CORREO ELECTRÓNICO'),
+                                TextFormField(
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: _fieldDecoration(
+                                      hint: 'tu@email.com',
+                                      icon: Icons.email_outlined),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu correo';
+                                    }
+                                    if (!value.contains('@')) {
+                                      return 'Por favor ingresa un correo válido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 14),
+
+                                _fieldLabel('TELÉFONO'),
+                                TextFormField(
+                                  controller: _telefonoController,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: _fieldDecoration(
+                                      hint: '+502 0000-0000',
+                                      icon: Icons.phone_outlined),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu teléfono';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 14),
+
+                                // CAMPOS ESPECÍFICOS PARA CICLISTAS
+                                if (_selectedRol == 'ciclista') ...[
+                                  _fieldLabel('GÉNERO'),
+                                  DropdownButtonFormField<String>(
+                                    initialValue: _selectedGenero,
+                                    decoration: _fieldDecoration(
+                                        hint: 'Seleccionar'),
+                                    items: const [
+                                      DropdownMenuItem(
+                                          value: 'Masculino',
+                                          child: Text('Masculino')),
+                                      DropdownMenuItem(
+                                          value: 'Femenino',
+                                          child: Text('Femenino')),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() => _selectedGenero = value);
+                                    },
+                                  ),
+                                  const SizedBox(height: 14),
+
+                                  _fieldLabel('FECHA DE NACIMIENTO'),
+                                  InkWell(
+                                    onTap: _selectDate,
+                                    child: InputDecorator(
+                                      decoration: _fieldDecoration(
+                                        hint: 'dd/mm/aaaa',
+                                        icon: Icons.calendar_today_outlined,
+                                      ),
+                                      child: Text(
+                                        _fechaNacimiento != null
+                                            ? '${_fechaNacimiento!.day}/${_fechaNacimiento!.month}/${_fechaNacimiento!.year}'
+                                            : 'dd/mm/aaaa',
+                                        style: TextStyle(
+                                          color: _fechaNacimiento != null
+                                              ? Colors.black87
+                                              : Colors.grey[400],
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ),
                                   ),
+                                  const SizedBox(height: 14),
+
+                                  _fieldLabel('CICLISMO PREFERIDO'),
+                                  DropdownButtonFormField<String>(
+                                    initialValue: _selectedCiclismoPreferido,
+                                    decoration: _fieldDecoration(
+                                        hint: 'Seleccionar',
+                                        icon: Icons.directions_bike_outlined),
+                                    items: const [
+                                      DropdownMenuItem(
+                                          value: 'MTB', child: Text('MTB')),
+                                      DropdownMenuItem(
+                                          value: 'Ruta', child: Text('Ruta')),
+                                      DropdownMenuItem(
+                                          value: 'Gravel',
+                                          child: Text('Gravel')),
+                                      DropdownMenuItem(
+                                          value: 'Urbano',
+                                          child: Text('Urbano')),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() =>
+                                          _selectedCiclismoPreferido = value);
+                                    },
+                                  ),
+                                  const SizedBox(height: 14),
+
+                                  _fieldLabel('DESCRIPCIÓN (OPCIONAL)'),
+                                  TextFormField(
+                                    controller: _descripcionController,
+                                    maxLines: 3,
+                                    decoration: _fieldDecoration(
+                                        hint: 'Cuéntanos un poco sobre ti...'),
+                                  ),
+                                  const SizedBox(height: 14),
+                                ],
+
+                                // CONTRASEÑA
+                                _fieldLabel('CONTRASEÑA'),
+                                TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: _obscurePassword,
+                                  decoration: _fieldDecoration(
+                                    hint: '••••••••',
+                                    icon: Icons.lock_outline,
+                                    suffix: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility_off_outlined
+                                            : Icons.visibility_outlined,
+                                        color: Colors.grey[400],
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        setState(() =>
+                                            _obscurePassword = !_obscurePassword);
+                                      },
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu contraseña';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'La contraseña debe tener al menos 6 caracteres';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 24),
+
+                                // BOTÓN REGISTRARSE
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    onPressed: _isLoading ? null : _register,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.buttonPrimary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(25),
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                    child: _isLoading
+                                        ? const SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 2,
+                                            ),
+                                          )
+                                        : const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Registrarse',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              SizedBox(width: 8),
+                                              Icon(Icons.arrow_forward,
+                                                  color: Colors.white,
+                                                  size: 18),
+                                            ],
+                                          ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // LINK A LOGIN
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '¿Ya tienes una cuenta? ',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 13),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Text(
+                                        'Inicia Sesión',
+                                        style: TextStyle(
+                                          color: AppColors.buttonPrimary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Center(
-                            child: Text(
-                              'Foto predeterminada',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-
-                        // NOMBRE
-                        TextFormField(
-                          controller: _nombreController,
-                          decoration: InputDecoration(
-                            labelText: 'Nombre',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            prefixIcon: const Icon(Icons.person),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu nombre';
-                            }
-                            return null;
-                          },
                         ),
-                        const SizedBox(height: 12),
-
-                        // APELLIDO
-                        TextFormField(
-                          controller: _apellidoController,
-                          decoration: InputDecoration(
-                            labelText: 'Apellido',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            prefixIcon: const Icon(Icons.person_outline),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu apellido';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // EMAIL
-                        TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Correo Electrónico',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            prefixIcon: const Icon(Icons.email),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu correo';
-                            }
-                            if (!value.contains('@')) {
-                              return 'Por favor ingresa un correo válido';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // TELÉFONO
-                        TextFormField(
-                          controller: _telefonoController,
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            labelText: 'Teléfono',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            prefixIcon: const Icon(Icons.phone),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu teléfono';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // CAMPOS ESPECÍFICOS PARA CICLISTAS
-                        if (_selectedRol == 'ciclista') ...[
-                          // GÉNERO
-                          DropdownButtonFormField<String>(
-                            value: _selectedGenero,
-                            decoration: InputDecoration(
-                              labelText: 'Género',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              prefixIcon: const Icon(Icons.people),
-                              filled: true,
-                              fillColor: Colors.grey[50],
-                            ),
-                            items: const [
-                              DropdownMenuItem(
-                                  value: 'Masculino', child: Text('Masculino')),
-                              DropdownMenuItem(
-                                  value: 'Femenino', child: Text('Femenino')),
-                            ],
-                            onChanged: (value) {
-                              setState(() => _selectedGenero = value);
-                            },
-                          ),
-                          const SizedBox(height: 12),
-
-                          // FECHA DE NACIMIENTO
-                          InkWell(
-                            onTap: _selectDate,
-                            child: InputDecorator(
-                              decoration: InputDecoration(
-                                labelText: 'Fecha de Nacimiento',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                prefixIcon: const Icon(Icons.calendar_today),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                              ),
-                              child: Text(
-                                _fechaNacimiento != null
-                                    ? '${_fechaNacimiento!.day}/${_fechaNacimiento!.month}/${_fechaNacimiento!.year}'
-                                    : 'Seleccionar fecha',
-                                style: TextStyle(
-                                  color: _fechaNacimiento != null
-                                      ? Colors.black87
-                                      : Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-
-                          // CICLISMO PREFERIDO
-                          DropdownButtonFormField<String>(
-                            value: _selectedCiclismoPreferido,
-                            decoration: InputDecoration(
-                              labelText: 'Ciclismo Preferido',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              prefixIcon: const Icon(Icons.directions_bike),
-                              filled: true,
-                              fillColor: Colors.grey[50],
-                            ),
-                            items: const [
-                              DropdownMenuItem(value: 'MTB', child: Text('MTB')),
-                              DropdownMenuItem(value: 'Ruta', child: Text('Ruta')),
-                              DropdownMenuItem(
-                                  value: 'Gravel', child: Text('Gravel')),
-                              DropdownMenuItem(
-                                  value: 'Urbano', child: Text('Urbano')),
-                            ],
-                            onChanged: (value) {
-                              setState(() => _selectedCiclismoPreferido = value);
-                            },
-                          ),
-                          const SizedBox(height: 12),
-
-                          // DESCRIPCIÓN
-                          TextFormField(
-                            controller: _descripcionController,
-                            maxLines: 3,
-                            decoration: InputDecoration(
-                              labelText: 'Descripción (opcional)',
-                              hintText: 'Cuéntanos sobre ti...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              prefixIcon: const Icon(Icons.description),
-                              filled: true,
-                              fillColor: Colors.grey[50],
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-
-                        // CONTRASEÑA
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Contraseña',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            prefixIcon: const Icon(Icons.lock),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(
-                                    () => _obscurePassword = !_obscurePassword);
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu contraseña';
-                            }
-                            if (value.length < 6) {
-                              return 'La contraseña debe tener al menos 6 caracteres';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 24),
-
-                        // BOTÓN REGISTRARSE
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _register,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.buttonPrimary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : const Text(
-                                    'Registrarse',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // LINK A LOGIN
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '¿Ya tienes cuenta? ',
-                              style: TextStyle(color: Colors.grey[600]),
-                            ),
-                            GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                              child: Text(
-                                'Inicia Sesión',
-                                style: TextStyle(
-                                  color: AppColors.buttonPrimary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                       ),
                     ),
-                const SizedBox(height: 24),
-              ],
-            ),
-          );
+
+                    const SizedBox(height: 32),
+
+                    // FOOTER
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.chat_bubble_outline,
+                            color: Colors.white70, size: 22),
+                        const SizedBox(width: 24),
+                        Icon(Icons.camera_alt_outlined,
+                            color: Colors.white70, size: 22),
+                        const SizedBox(width: 24),
+                        Icon(Icons.emoji_events_outlined,
+                            color: Colors.white70, size: 22),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _footerLink('PRIVACIDAD'),
+                        const SizedBox(width: 20),
+                        _footerLink('TÉRMINOS'),
+                        const SizedBox(width: 20),
+                        _footerLink('SOPORTE'),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '© 2024 EL CICLISTA CHAPÍN. TODOS LOS DERECHOS RESERVADOS.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 9,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              );
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _rolTab(String label, String value) {
+    final isSelected = _selectedRol == value;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() {
+          _selectedRol = value;
+          _selectedCiclismoPreferido = null;
+          _selectedGenero = null;
+          _fechaNacimiento = null;
+        }),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.buttonPrimary : Colors.transparent,
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? Colors.white : Colors.grey[500],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _footerLink(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white70,
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
       ),
     );
   }
