@@ -167,44 +167,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 40),
-
-                // Logo
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 100,
-                  height: 100,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isWeb = constraints.maxWidth > 600;
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: isWeb ? 48.0 : 0.0,
                 ),
-                const SizedBox(height: 16),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
 
-                // Título
-                const Text(
-                  'El Ciclista Chapín',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                    // Logo
+                    Image.asset(
+                      'assets/images/logo.png',
+                      width: isWeb ? 110.0 : 100.0,
+                      height: isWeb ? 110.0 : 100.0,
+                    ),
+                    const SizedBox(height: 16),
 
-                // Subtítulo
-                const Text(
-                  'Crear cuenta nueva',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
-                ),
-                const SizedBox(height: 24),
+                    // Título
+                    Text(
+                      'El Ciclista Chapín',
+                      style: TextStyle(
+                        fontSize: isWeb ? 28.0 : 24.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
 
-                // Card con formulario
-                Container(
+                    // Subtítulo
+                    const Text(
+                      'Crear cuenta nueva',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Card con formulario
+                    Center(
+                      child: SizedBox(
+                        width: isWeb ? 420.0 : double.infinity,
+                        child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -569,9 +578,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
+                      ),
+                    ),
                 const SizedBox(height: 24),
               ],
             ),
+          );
+            },
           ),
         ),
       ),

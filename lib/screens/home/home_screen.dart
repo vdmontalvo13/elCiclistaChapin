@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/portada.png'),
+          image: AssetImage('assets/images/portada.jpg'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             Colors.black.withOpacity(0.4),
