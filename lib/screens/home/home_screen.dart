@@ -375,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisCount: 3,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.72,
+                childAspectRatio: 1.05,
               ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) => _buildEventCard(snapshot.data![index]),
